@@ -1,1 +1,0 @@
-# alkewallet-django
