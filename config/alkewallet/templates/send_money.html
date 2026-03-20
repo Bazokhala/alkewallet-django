@@ -1,0 +1,143 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<style>
+    .container-send {
+        max-width: 400px;
+        margin: auto;
+        padding: 20px;
+    }
+</style>
+
+<div class="container-send">
+    <h2 class="mb-4">Enviar Dinero</h2>
+
+    <div class="mb-3">
+        <label for="buscarContacto" class="form-label">Buscar Contacto:</label>
+        <input
+            type="text"
+            class="form-control"
+            id="buscarContacto"
+            placeholder="Nombre del contacto"
+        />
+        <button type="button" class="btn btn-primary w-100 mt-2" id="btnAgregarContacto">
+            + Nuevo Contacto
+        </button>
+    </div>
+
+    <div id="formContacto" class="mt-3 p-3 border rounded bg-light" style="display: none">
+        <h4>Nuevo Contacto</h4>
+        <form method="post">
+            {% csrf_token %} {% for field in form %}
+
+            <div class="mb-3">
+                <label class="form-label"> {{ field.label }} </label>
+
+                {{ field }} {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+                {% endif %} {% for error in field.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            {% endfor %}
+
+            <div class="d-grid">
+                <button class="btn btn-success">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <h3 class="mt-4">Mis Contactos</h3>
+    <form method="POST">
+        {% csrf_token %}
+        <h3 class="mt-4">Seleccionar Contacto</h3>
+        <ul id="listaContactos" class="list-group mb-4">
+            {% for contacto in contactos %}
+            <li
+                class="list-group-item d-flex justify-content-between align-items-center contacto-item"
+            >
+                <div class="d-flex align-items-center">
+                    <input
+                        class="form-check-input me-2"
+                        type="radio"
+                        name="contacto_id"
+                        value="{{ contacto.id }}"
+                        id="radio{{ contacto.id }}"
+                        required
+                    />
+                    <label class="form-check-label" for="radio{{ contacto.id }}">
+                        <strong>{{ contacto.nombre }} {{ contacto.apellido }}</strong><br />
+                        <small class="text-muted">CBU: {{ contacto.cbu }}</small>
+                    </label>
+                </div>
+
+                <a
+                    href="{% url 'delete_contact' contacto.id %}"
+                    class="btn btn-sm btn-outline-danger border-0"
+                    onclick="
+                        return confirm('¿Estás seguro de que quieres eliminar este contacto?');
+                    "
+                >
+                    <i class="bi bi-trash"></i> Eliminar
+                </a>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-center text-muted">No tienes contactos guardados.</li>
+            {% endfor %}
+        </ul>
+
+        <label class="form-label">Monto a enviar:</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text">$</span>
+            <input
+                type="number"
+                name="monto"
+                id="monto"
+                class="form-control"
+                step="0.01"
+                min="0.01"
+                required
+            />
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg w-100">Confirmar Envío</button>
+    </form>
+
+    <a href="{% url 'menu' %}" class="btn btn-outline-secondary w-100 mt-3"
+        >Volver al menú principal</a
+    >
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btnAgregar = document.getElementById("btnAgregarContacto");
+        const formContacto = document.getElementById("formContacto");
+
+        btnAgregar.addEventListener("click", function () {
+            if (formContacto.style.display === "none") {
+                formContacto.style.display = "block";
+                btnAgregar.textContent = "Cancelar";
+                btnAgregar.classList.replace("btn-primary", "btn-outline-danger");
+            } else {
+                formContacto.style.display = "none";
+                btnAgregar.textContent = "+ Nuevo Contacto";
+                btnAgregar.classList.replace("btn-outline-danger", "btn-primary");
+            }
+        });
+
+        const buscador = document.getElementById("buscarContacto");
+        const contactos = document.querySelectorAll(".contacto-item");
+
+        buscador.addEventListener("input", function () {
+            const termino = buscador.value.toLowerCase().trim();
+
+            contactos.forEach((item) => {
+                const nombreCompleto = item.querySelector("strong").textContent.toLowerCase();
+
+                if (nombreCompleto.includes(termino)) {
+                    item.style.display = "flex";
+                } else {
+                    item.setAttribute("style", "display: none !important");
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

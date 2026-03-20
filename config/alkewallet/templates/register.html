@@ -1,0 +1,52 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container mt-5" style="max-width: 400px">
+    <h2 class="mb-4 text-center">Crear Cuenta</h2>
+    <!-- prettier-ignore -->
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Nombre de Usuario:</label>
+            <input
+                type="text"
+                name="username"
+                class="form-control"
+                id="username"
+                placeholder="Ej: juan_perez"
+                required
+            />
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input
+                type="email"
+                name="email"
+                class="form-control"
+                id="email"
+                placeholder="correo@ejemplo.com"
+                required
+            />
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña:</label>
+            <input
+                type="password"
+                name="password"
+                class="form-control"
+                id="password"
+                placeholder="Mínimo 8 caracteres"
+                required
+            />
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Registrarse ahora</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <a href="{% url 'login' %}" class="text-decoration-none"
+            >¿Ya tienes cuenta? Inicia Sesión</a
+        >
+    </div>
+</div>
+{% endblock %}

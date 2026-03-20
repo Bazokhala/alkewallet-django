@@ -1,0 +1,46 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<style>
+    .container-deposit {
+        max-width: 400px;
+        margin: auto;
+        padding: 20px;
+    }
+</style>
+
+<div class="container-deposit">
+    <h2 class="mb-4 text-center">Depositar</h2>
+
+    <div id="alertContainer"></div>
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %} {% endif %}
+    <form id="form-deposito" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="depositar" class="form-label">Monto a depositar:</label>
+            <input
+                type="number"
+                name="monto"
+                class="form-control"
+                id="depositar"
+                placeholder="Ingrese el monto"
+                required
+            />
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mt-2">Realizar depósito</button>
+    </form>
+
+    <div id="leyendaDeposito" class="mt-3 text-center"></div>
+
+    <hr />
+    <a href="{% url 'menu' %}" class="btn btn-outline-secondary w-100">
+        Volver al Menú Principal
+    </a>
+</div>
+
+<!-- <script src="{% static 'js/deposit.js' %}"></script> -->
+
+{% endblock %}

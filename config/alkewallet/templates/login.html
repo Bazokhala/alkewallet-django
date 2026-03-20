@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container mt-5" style="max-width: 400px">
+    <h2 class="mb-4">Login</h2>
+
+    <div id="alertContainer"></div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Email o Usuario:</label>
+            <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                placeholder="Ingresar nombre de usuario"
+                required
+            />
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña:</label>
+            <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Ingresar contraseña"
+                required
+            />
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+    </form>
+</div>
+
+<script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
